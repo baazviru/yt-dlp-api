@@ -3,6 +3,10 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"message": "YT-DLP API is running!"}
+
 @app.get("/get_video_url/")
 def get_video_url(video_id: str):
     try:
