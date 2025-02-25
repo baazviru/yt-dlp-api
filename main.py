@@ -16,6 +16,6 @@ def get_video_url(video_id: str):
             video_url = result.stdout.strip()
             return {"video_url": video_url}
         else:
-            return {"error": result.stderr.strip()}
+            return {"error1": result.stderr.strip()}
     except Exception as e:
-        return {"error": str(e)}
+        return {"error2": str(e)}
