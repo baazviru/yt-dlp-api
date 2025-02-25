@@ -64,8 +64,12 @@ def extract_playback_url(video_url: str):
 
 
 
-# Yt-dlp se playback URL extract kar rahe hain
-def get_playback_url(video_url):
+class VideoURL(BaseModel):
+    url: str
+
+# Playback URL extract karne ka endpoint
+@app.get("/playback-url/")
+def get_playback_url(video_url: str):
     try:
         output = subprocess.check_output([
             "yt-dlp",
@@ -73,9 +77,9 @@ def get_playback_url(video_url):
             "-g", video_url
         ]).decode("utf-8").strip()
 
-        return output
+        return {"status": "success", "playback_url": output}
     except Exception as e:
-        return str(e)
+        return {"status": "error", "message": str(e)}
 
 
 
