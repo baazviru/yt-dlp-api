@@ -84,7 +84,7 @@ def get_playback_url(video_url: str):
 
 @app.get("/mypath/")
 # Check if file exists
-if not os.path.exists(cookies_path):
+if os.path.exists(cookies_path):
     raise FileNotFoundError(f"Cookies file not found at {cookies_path}")
     
 def get_playback_url(video_url: str):
