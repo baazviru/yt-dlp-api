@@ -82,4 +82,23 @@ def get_playback_url(video_url: str):
         return {"status": "error", "message": str(e)}
 
 
+@app.get("/mypath/")
+def get_playback_url(video_url: str):
+    try:
+        # Read the cookies content
+        with open(cookies_path, "r") as f:
+            cookies_content = f.read().strip()
+
+        # Pass cookies as a header
+        output = subprocess.check_output([
+            "yt-dlp",
+            f"--add-header", f"Cookie: {cookies_content}",
+            "-g", video_url
+        ]).decode("utf-8").strip()
+
+        return {"status": "success", "playback_url": output}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
 
