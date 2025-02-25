@@ -6,12 +6,15 @@ from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 import yt_dlp
 
+# Cookies ka path set karo
+cookies_path = os.getenv("COOKIES_PATH", "/app/cookies.txt")
+print(f"Cookies Path: {cookies_path}")  # Yeh line add karo
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "YT-DLP API is running!"}
+    return {"message": cookies_path}
 
 @app.get("/extract")
 def extract_url(video_url: str = Query(..., description="YouTube video URL")):
@@ -33,8 +36,6 @@ def extract_url(video_url: str = Query(..., description="YouTube video URL")):
 
 
 
-# Cookies ka path set karo
-cookies_path = os.getenv("COOKIES_PATH", "/app/cookies.txt")
 
 
 # Playback URL extract karne ka GET endpoint
@@ -60,6 +61,21 @@ def extract_playback_url(video_url: str):
         return {"status": "error", "message": str(e)}
 
 
+
+
+
+# Yt-dlp se playback URL extract kar rahe hain
+def get_playback_url(video_url):
+    try:
+        output = subprocess.check_output([
+            "yt-dlp",
+            "--cookies", cookies_path,
+            "-g", video_url
+        ]).decode("utf-8").strip()
+
+        return output
+    except Exception as e:
+        return str(e)
 
 
 
