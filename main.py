@@ -11,7 +11,10 @@ def read_root():
 @app.get("/extract")
 def extract_url(video_url: str = Query(..., description="YouTube video URL")):
     try:
-        ydl_opts = {'format': 'best'}
+        ydl_opts = {
+            'format': 'best',
+            'cookiefile': 'cookies.txt'  # Pass the cookies for authentication
+        }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
             video_url = info['url']
