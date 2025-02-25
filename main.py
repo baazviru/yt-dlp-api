@@ -14,7 +14,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": cookies_path}
+    return {"message": cookies_path, "ServerStatus": "Server is running"}
 
 @app.get("/extract")
 def extract_url(video_url: str = Query(..., description="YouTube video URL")):
