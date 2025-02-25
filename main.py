@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 import yt_dlp
 
 # Cookies ka path set karo
-cookies_path = os.getenv("COOKIES_PATH", "/app/cookies.txt")
+cookies_path = os.getenv("COOKIES_PATH", "/opt/render/project/src/app/cookies.txt")
 print(f"Cookies Path: {cookies_path}")  # Yeh line add karo
 
 app = FastAPI()
@@ -83,10 +83,7 @@ def get_playback_url(video_url: str):
 
 
 @app.get("/mypath/")
-# Check if file exists
-if os.path.exists(cookies_path):
-    raise FileNotFoundError(f"Cookies file not found at {cookies_path}")
-    
+
 def get_playback_url(video_url: str):
     try:
         # Read the cookies content
