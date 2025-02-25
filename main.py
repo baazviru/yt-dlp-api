@@ -13,7 +13,7 @@ def extract_url(video_url: str = Query(..., description="YouTube video URL")):
     try:
         ydl_opts = {
             'format': 'best',
-            'cookiefile': 'cookies.txt'  # Pass the cookies for authentication
+            #'cookiefile': 'cookies.txt',  # Pass the cookies for authentication
             'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
             'Accept-Language': 'en-US,en;q=0.9'
