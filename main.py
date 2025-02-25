@@ -1,18 +1,21 @@
-from fastapi import FastAPI, Query
-import yt_dlp
+import subprocess
+from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "YT-DLP API is running!"}
-
-@app.get("/extract")
-def extract(url: str = Query(...)):
+@app.get("/get_video_url/")
+def get_video_url(video_id: str):
     try:
-        ydl_opts = {'format': 'best'}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-            return info
+        # Run yt-dlp command with cookies
+        result = subprocess.run(
+            ["yt-dlp", "-g", f"https://www.youtube.com/watch?v={video_id}", "--cookies", "cookies.txt"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            video_url = result.stdout.strip()
+            return {"video_url": video_url}
+        else:
+            return {"error": result.stderr.strip()}
     except Exception as e:
         return {"error": str(e)}
