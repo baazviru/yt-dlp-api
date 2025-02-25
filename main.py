@@ -10,6 +10,8 @@ import yt_dlp
 cookies_path = os.getenv("COOKIES_PATH", "/opt/render/project/src/app/cookies.txt")
 print(f"Cookies Path: {cookies_path}")  # Yeh line add karo
 
+cookies = "SID=g.a000uAh8uWhBiwVmfPnvLoGKed8m1PuIUg-ITw25SuITK9g0vIH1oqbRbWv2NrKIGjynQCG0ZgACgYKAZYSARcSFQHGX2MikQHnF9HLGEsMjvHjKrNidRoVAUF8yKpf4xJps_6MjjM0IZNEPDgS0076; HSID=A0QSgbsEb1Rba-_N3; SSID=A-pgr3Witnyzc9asQ; YSC=Xu6J_R5FWoM; VISITOR_INFO1_LIVE=U05uyeNkYqs"
+
 app = FastAPI()
 
 @app.get("/")
@@ -44,7 +46,7 @@ def extract_playback_url(video_url: str):
     try:
         command = [
             "yt-dlp",
-            "--cookies", cookies_path,
+            "--cookies", cookies,
             "--get-url",
             video_url
         ]
@@ -73,7 +75,7 @@ def get_playback_url(video_url: str):
     try:
         output = subprocess.check_output([
             "yt-dlp",
-            "--cookies", cookies_path,
+            "--cookies", cookies,
             "-g", video_url
         ]).decode("utf-8").strip()
 
@@ -87,7 +89,7 @@ def get_playback_url(video_url: str):
     try:
         # Read the cookies content
         with open(cookies_path, "r") as f:
-            cookies_content = f.read().strip()
+            cookies_content = cookies
 
         # Pass cookies as a header
         output = subprocess.check_output([
