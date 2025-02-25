@@ -1,6 +1,11 @@
+from pydantic import BaseModel
+import os
+import subprocess
+
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 import yt_dlp
+
 
 app = FastAPI()
 
@@ -25,4 +30,36 @@ def extract_url(video_url: str = Query(..., description="YouTube video URL")):
             return {"success": True, "video_url": video_url}
     except Exception as e:
         return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
+
+
+
+# Cookies ka path set karo
+cookies_path = os.getenv("COOKIES_PATH", "/app/cookies.txt")
+
+
+# Playback URL extract karne ka GET endpoint
+@app.get("/extract-url/")
+def extract_playback_url(video_url: str):
+    try:
+        command = [
+            "yt-dlp",
+            "--cookies", cookies_path,
+            "--get-url",
+            video_url
+        ]
+
+        result = subprocess.run(command, text=True, capture_output=True)
+
+        if result.returncode == 0:
+            playback_url = result.stdout.strip()
+            return {"status": "success", "playback_url": playback_url}
+        else:
+            return {"status": "error", "message": result.stderr}
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+
+
 
