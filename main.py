@@ -83,7 +83,6 @@ def get_playback_url(video_url: str):
 
 
 @app.get("/mypath/")
-
 def get_playback_url(video_url: str):
     try:
         # Read the cookies content
