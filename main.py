@@ -3,7 +3,7 @@ import os
 import subprocess
 
 from fastapi import FastAPI, Query, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import yt_dlp
 import httpx
 
