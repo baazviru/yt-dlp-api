@@ -17,12 +17,10 @@ print(f"Cookies Path: {cookies_path}")  # Yeh line add karo
 cookies = "SID=g.a000uAh8uWhBiwVmfPnvLoGKed8m1PuIUg-ITw25SuITK9g0vIH1oqbRbWv2NrKIGjynQCG0ZgACgYKAZYSARcSFQHGX2MikQHnF9HLGEsMjvHjKrNidRoVAUF8yKpf4xJps_6MjjM0IZNEPDgS0076; HSID=A0QSgbsEb1Rba-_N3; SSID=A-pgr3Witnyzc9asQ; YSC=Xu6J_R5FWoM; VISITOR_INFO1_LIVE=U05uyeNkYqs"
 
 app = FastAPI()
-app2 = Flask(__name__)
 
-#@app.get("/")
-app.get("/")
-def read_root():
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+@app.get("/")  # Correct FastAPI route
+async def read_root(request: Request):
+    ip = request.headers.get('X-Forwarded-For', request.client.host)
     user_agent = request.headers.get('User-Agent')
     referer = request.headers.get('Referer')
     accept = request.headers.get('Accept')
@@ -31,7 +29,7 @@ def read_root():
     method = request.method
     cookies = request.cookies
 
-    return {
+    return JSONResponse(content={
         "ip": ip,
         "user_agent": user_agent,
         "referer": referer,
@@ -40,10 +38,7 @@ def read_root():
         "auth_token": auth_token,
         "method": method,
         "cookies": cookies
-    }, 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    })
 
 @app.get("/extract")
 def extract_url(video_url: str = Query(..., description="YouTube video URL")):
