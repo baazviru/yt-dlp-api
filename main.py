@@ -84,7 +84,8 @@ async def home():
 # API endpoint to receive location
 
 
-@app.get("/send-location")  # Correct FastAPI route
+#@app.get("/send-location")  # Correct FastAPI route
+@app.post("/send-location")
 async def read_root(request: Request):
     ip = request.headers.get('X-Forwarded-For', request.client.host)
     if ip and ',' in ip:
