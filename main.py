@@ -20,7 +20,7 @@ app = FastAPI()
 app2 = Flask(__name__)
 
 #@app.get("/")
-@app2.get("/")
+app.get("/")
 def read_root():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     user_agent = request.headers.get('User-Agent')
