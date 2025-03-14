@@ -2,8 +2,6 @@ from pydantic import BaseModel
 import os
 import subprocess
 
-from flask import Flask, request
-
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import JSONResponse
 import yt_dlp
@@ -30,7 +28,7 @@ async def read_root(request: Request):
 
         # Call ipinfo.io API to get location
     ip_info_url = f"https://ipinfo.io/{ip}/json"
-    response = requests.get(ip_info_url)
+    response = request.get(ip_info_url)
     location_data = response.json()
 
     return JSONResponse(content={
