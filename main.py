@@ -98,6 +98,10 @@ async def read_root(request: Request):
     method = request.method
     cookies = request.cookies
 
+    data = await request.json()
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
     # ✅ Use httpx for external API call (async)
     ip_info_url = f"https://ipinfo.io/{ip}/json"
     # Async GET request
@@ -114,7 +118,11 @@ async def read_root(request: Request):
         "auth_token": auth_token,
         "method": method,
         "cookies": cookies,
-        "location": location_data
+        "location_ip_based": location_data,  # IP-based location
+        "location_gps_based": {  # GPS-based location from user device
+            "latitude": latitude,
+            "longitude": longitude
+        }
     })
 
 @app.get("/extract")
