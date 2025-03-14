@@ -21,7 +21,7 @@ app2 = Flask(__name__)
 
 #@app2.get("/")
 #@app2.route('/api', methods=['GET'])
-@app2.route('/api', methods=['GET', 'POST'])
+@app2.route("/", methods=['GET', 'POST'])
 def read_root():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     user_agent = request.headers.get('User-Agent')
