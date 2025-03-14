@@ -18,6 +18,8 @@ app = FastAPI()
 @app.get("/")  # Correct FastAPI route
 async def read_root(request: Request):
     ip = request.headers.get('X-Forwarded-For', request.client.host)
+    if ip and ',' in ip:
+        ip = ip.split(',')[0].strip()  # ✅ Get first real IP
     
     user_agent = request.headers.get('User-Agent')
     referer = request.headers.get('Referer')
