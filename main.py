@@ -19,9 +19,8 @@ cookies = "SID=g.a000uAh8uWhBiwVmfPnvLoGKed8m1PuIUg-ITw25SuITK9g0vIH1oqbRbWv2NrK
 app = FastAPI()
 app2 = Flask(__name__)
 
-#@app2.get("/")
-#@app2.route('/api', methods=['GET'])
-@app2.route("/", methods=['GET', 'POST'])
+#@app.get("/")
+@app2.get("/")
 def read_root():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     user_agent = request.headers.get('User-Agent')
