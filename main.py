@@ -15,7 +15,76 @@ cookies = "SID=g.a000uAh8uWhBiwVmfPnvLoGKed8m1PuIUg-ITw25SuITK9g0vIH1oqbRbWv2NrK
 
 app = FastAPI()
 
-@app.get("/")  # Correct FastAPI route
+# Serve HTML page to get location
+@app.get("/", response_class=HTMLResponse)
+async def home():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Get Exact Location</title>
+        <script>
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            }
+
+            function showPosition(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+
+                // Sending lat/lon to backend via POST
+                fetch('/send-location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ latitude: lat, longitude: lon })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    document.getElementById('response').innerText = 'Location received! Latitude: ' + data.latitude + ', Longitude: ' + data.longitude;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function showError(error) {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert('User denied the request for Geolocation.');
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert('Location information is unavailable.');
+                        break;
+                    case error.TIMEOUT:
+                        alert('The request to get user location timed out.');
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        alert('An unknown error occurred.');
+                        break;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Get Exact Location using GPS</h2>
+        <button onclick="getLocation()">Share Location</button>
+        <p id="response"></p>
+    </body>
+    </html>
+    """
+
+
+# API endpoint to receive location
+
+
+@app.get("/send-location")  # Correct FastAPI route
 async def read_root(request: Request):
     ip = request.headers.get('X-Forwarded-For', request.client.host)
     if ip and ',' in ip:
