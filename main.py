@@ -19,6 +19,7 @@ app = FastAPI()
 @app.get("/")  # Correct FastAPI route
 async def read_root(request: Request):
     ip = request.headers.get('X-Forwarded-For', request.client.host)
+    
     user_agent = request.headers.get('User-Agent')
     referer = request.headers.get('Referer')
     accept = request.headers.get('Accept')
@@ -26,6 +27,11 @@ async def read_root(request: Request):
     auth_token = request.headers.get('Authorization')
     method = request.method
     cookies = request.cookies
+
+        # Call ipinfo.io API to get location
+    ip_info_url = f"https://ipinfo.io/{ip}/json"
+    response = requests.get(ip_info_url)
+    location_data = response.json()
 
     return JSONResponse(content={
         "ip": ip,
@@ -35,7 +41,8 @@ async def read_root(request: Request):
         "content_type": content_type,
         "auth_token": auth_token,
         "method": method,
-        "cookies": cookies
+        "cookies": cookies,
+        "location": location_data
     })
 
 @app.get("/extract")
