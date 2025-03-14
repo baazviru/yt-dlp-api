@@ -5,6 +5,7 @@ import subprocess
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import JSONResponse
 import yt_dlp
+import httpx
 
 # Cookies ka path set karo
 cookies_path = os.getenv("COOKIES_PATH", "/opt/render/project/src/app/cookies.txt")
@@ -26,10 +27,12 @@ async def read_root(request: Request):
     method = request.method
     cookies = request.cookies
 
-        # Call ipinfo.io API to get location
+    # ✅ Use httpx for external API call (async)
     ip_info_url = f"https://ipinfo.io/{ip}/json"
-    response = request.get(ip_info_url)
-    location_data = response.json()
+    # Async GET request
+    async with httpx.AsyncClient() as client:
+        response = await client.get(ip_info_url)
+        location_data = response.json()  # Parse JSON response
 
     return JSONResponse(content={
         "ip": ip,
